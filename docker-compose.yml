@@ -1,39 +1,32 @@
 version: "3"
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - POSTGRES_PASSWORD=postgres_password
-  redis:
-    image: 'redis:latest' 
   client:
     image: "yasarui/multi-client"
     hostname: client
   server:
-    depends_on:
-      - redis
-      - postgres
     image: "yasarui/multi-server"
     hostname: api
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - PGUSER=postgres
-      - PGHOST=postgres
-      - PGDATABASE=postgres
-      - PGPASSWORD=postgres_password
-      - PGPORT=5432
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PGUSER=$PGUSER
+      - PGHOST=$PGHOST
+      - PGDATABASE=$PGDATABASE
+      - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
   worker:
     image: "yasarui/multi-worker"
+    mem_limit: 128m
     hostname: worker
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
   nginx:
     depends_on:
       - server
       - client
     image: "yasarui/multi-nginx"
+    mem_limit: 128m
     hostname: nginx
     ports:
       - "80:80"
