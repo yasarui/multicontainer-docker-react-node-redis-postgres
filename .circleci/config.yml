@@ -25,10 +25,18 @@ jobs:
           docker push yasarui/multi-nginx
           docker push yasarui/multi-server
           docker push yasarui/multi-worker
-  aws-elastic-beanstalk/deploy:
-    context: aws-creds
-    application-name: multi-docker
-    environment-name: MultiDocker-env
-    label: version-<<pipeline.number>>
-    requires:
+workflows:
+  build_and_deploy:
+    jobs:
       - build
+      - aws-elastic-beanstalk/deploy:
+          context: aws-creds
+          application-name: multi-docker
+          environment-name: MultiDocker-env
+          filters:
+            branches:
+              only:
+                - main
+          label: version-<<pipeline.number>>
+          requires:
+            - build
