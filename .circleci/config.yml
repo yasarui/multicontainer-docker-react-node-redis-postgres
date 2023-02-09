@@ -29,10 +29,6 @@ jobs:
     context: aws-creds
     application-name: multi-docker
     environment-name: MultiDocker-env
-     filters:
-       branches:
-        only:
-          - main
     label: version-<<pipeline.number>>
     requires:
       - build
