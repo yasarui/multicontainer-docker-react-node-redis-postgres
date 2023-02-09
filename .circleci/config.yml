@@ -12,14 +12,14 @@ jobs:
           version: 20.10.14
           docker_layer_caching: true
       - run: |
-          - docker build -t yasarui/multi-client ./client
-          - docker build -t yasarui/multi-nginx ./nginx
-          - docker build -t yasarui/multi-server ./server
-          - docker build -t yasarui/multi-worker ./worker
+          docker build -t yasarui/multi-client ./client
+          docker build -t yasarui/multi-nginx ./nginx
+          docker build -t yasarui/multi-server ./server
+          docker build -t yasarui/multi-worker ./worker
           # Log in to the docker CLI
-            docker login -u $DOCKER_USER -p $DOCKERHUB_PASSWORD
+          docker login -u $DOCKER_USER -p $DOCKERHUB_PASSWORD
           # Take those images and push them to docker hub
-          - docker push yasarui/multi-client
-          - docker push yasarui/multi-nginx
-          - docker push yasarui/multi-server
-          - docker push yasarui/multi-worker
+          docker push yasarui/multi-client
+          docker push yasarui/multi-nginx
+          docker push yasarui/multi-server
+          docker push yasarui/multi-worker
