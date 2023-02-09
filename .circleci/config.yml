@@ -1,0 +1,29 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: cimg/go:1.17
+        auth:
+          username: yasarui
+          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
+    steps:
+      - checkout
+      # ... steps for building/testing app ...
+
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+
+      # build and push Docker image
+      - run: |
+	  - docker build -t yasarui/multi-client ./client
+	  - docker build -t yasarui/multi-nginx ./nginx
+	  - docker build -t yasarui/multi-server ./server
+	  - docker build -t yasarui/multi-worker ./worker
+	  # Log in to the docker CLI
+      docker login -u $DOCKER_USER -p $DOCKERHUB_PASSWORD
+	  # Take those images and push them to docker hub
+	  - docker push yasarui/multi-client
+	  - docker push yasarui/multi-nginx
+	  - docker push yasarui/multi-server
+	  - docker push yasarui/multi-worker
